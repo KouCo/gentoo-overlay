@@ -1,0 +1,2 @@
+# Getnoo Portage overlay
+

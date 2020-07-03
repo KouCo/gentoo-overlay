@@ -1,0 +1,18 @@
+diff --git a/src/program_filter.hh b/src/program_filter.hh
+index a4fe590..b19e9cb 100644
+--- a/src/program_filter.hh
++++ b/src/program_filter.hh
+@@ -234,8 +234,11 @@ class ProgramFilter final : public PacketSink,
+     }
+ 
+     // The following condition is ensured by ServiceFilter.
+-    MIRAKC_ARIB_ASSERT(pat.pmts.find(option_.sid) != pat.pmts.end());
+-
++    //MIRAKC_ARIB_ASSERT(pat.pmts.find(option_.sid) != pat.pmts.end());
++    if( pat.pmts.find(option_.sid) == pat.pmts.end()) {
++      MIRAKC_ARIB_WARN("Not found SID#{:04X}", option_.sid);
++      return;
++    }
+     auto new_pmt_pid = pat.pmts[option_.sid];
+ 
+     if (pmt_pid_ != ts::PID_NULL) {

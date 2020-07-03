@@ -1,0 +1,15 @@
+[Unit]
+Description = mirakc
+
+[Service]
+#Environment="RUST_LOG=info,mirakc=debug"
+#Environment="MIRAKC_DEBUG_CHILD_PROCESS="
+#Environment="MIRAKC_ARIB_LOG=info"
+
+ExecStart = /usr/bin/mirakc -c /etc/mirakc/config.yml
+Restart = always
+Type = simple
+
+[Install]
+WantedBy = multi-user.target
+

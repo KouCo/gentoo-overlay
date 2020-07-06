@@ -1,2 +1,2 @@
-# Getnoo Portage overlay
+# Gentoo Portage overlay
 

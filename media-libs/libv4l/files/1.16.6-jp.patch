@@ -1,0 +1,42 @@
+diff --git a/lib/libdvbv5/dvb-fe.c b/lib/libdvbv5/dvb-fe.c
+index 5dcf492e..3ddb69df 100644
+--- a/lib/libdvbv5/dvb-fe.c
++++ b/lib/libdvbv5/dvb-fe.c
+@@ -830,6 +830,24 @@ static void dvb_setup_delsys_default(struct dvb_v5_fe_parms *p)
+ 	uint32_t cc;
+ 
+ 	switch (p->current_sys) {
++	case SYS_DVBC_ANNEX_A:
++	case SYS_DVBC_ANNEX_B:
++	case SYS_DVBC_ANNEX_C:
++	case SYS_DVBS2:
++		cc = COUNTRY_UNKNOWN;
++		dvb_fe_retrieve_parm(p, DTV_COUNTRY_CODE, &cc);
++		if (cc == COUNTRY_UNKNOWN && parms->country != COUNTRY_UNKNOWN) {
++			cc = parms->country;
++			dvb_fe_store_parm(p, DTV_COUNTRY_CODE, cc);
++		}
++		switch (cc) {
++		case JP:
++			p->default_charset = "arib-std-b24";
++			break;
++		default:
++			break;
++		}
++		break;
+ 	case SYS_ISDBT:
+ 		/* Set country code. */
+ 		/* if the default country is not known, fallback to BR */
+diff --git a/lib/libdvbv5/dvb-scan.c b/lib/libdvbv5/dvb-scan.c
+index 5c8aca96..2936874e 100644
+--- a/lib/libdvbv5/dvb-scan.c
++++ b/lib/libdvbv5/dvb-scan.c
+@@ -1159,6 +1159,8 @@ static void add_update_nit_isdbs(struct dvb_table_nit *nit,
+ 			     dvbs_polarization[d->polarization]);
+ 	dvb_store_entry_prop(new, DTV_SYMBOL_RATE,
+ 			     d->symbol_rate);
++	dvb_store_entry_prop(new, DTV_STREAM_ID,
++			     ts_id);
+ }
+ 
+ 

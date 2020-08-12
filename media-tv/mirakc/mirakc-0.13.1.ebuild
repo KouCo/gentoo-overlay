@@ -48,7 +48,10 @@ src_install() {
 
 	insinto /etc/mirakc
 	newins ${S}/docker/sample-mirakc-config.yml config.yml
+	newins ${S}/resources/strings.yml strings.yml
 	newins ${FILESDIR}/mirakurun.openapi-3.3.1.json mirakurun.openapi.json
+
+	keepdir /var/lib/mirakc/epg
 
 	if use systemd; then
 		systemd_newunit ${FILESDIR}/mirakc.service mirakc.service

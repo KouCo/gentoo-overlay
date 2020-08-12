@@ -11,12 +11,12 @@ SRC_URI="https://github.com/masnagam/mirakc/archive/${PV}.tar.gz"
 
 LICENSE="MIT Apache-2.0"
 SLOT="0"
-KEYWORDS="amd64"
+KEYWORDS="~amd64"
 RESTRICT="network-sandbox"
 IUSE="systemd debug"
 REQUIRED_USE="systemd"
 
-RDEPEND="media-tv/mirakc-arib
+RDEPEND="=media-tv/mirakc-arib-0.9.1
          net-misc/socat
 "
 DEPEND="${RDEPEND}
@@ -48,7 +48,7 @@ src_install() {
 
 	insinto /etc/mirakc
 	newins ${S}/docker/sample-mirakc-config.yml config.yml
-	newins ${FILESDIR}/mirakurun.openapi-2.14.0.json mirakurun.openapi.json
+	newins ${FILESDIR}/mirakurun.openapi-3.3.1.json mirakurun.openapi.json
 
 	if use systemd; then
 		systemd_newunit ${FILESDIR}/mirakc.service mirakc.service

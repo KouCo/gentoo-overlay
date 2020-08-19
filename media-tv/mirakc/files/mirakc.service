@@ -9,6 +9,7 @@ Description = mirakc
 ExecStart = /usr/bin/mirakc -c /etc/mirakc/config.yml
 Restart = always
 Type = simple
+Nice = -10
 
 [Install]
 WantedBy = multi-user.target

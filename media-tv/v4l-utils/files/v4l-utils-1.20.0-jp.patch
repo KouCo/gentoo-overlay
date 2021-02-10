@@ -1,5 +1,5 @@
 diff --git a/lib/libdvbv5/dvb-fe.c b/lib/libdvbv5/dvb-fe.c
-index 5dcf492e..8e0684fe 100644
+index 68dd57c4..4e93d422 100644
 --- a/lib/libdvbv5/dvb-fe.c
 +++ b/lib/libdvbv5/dvb-fe.c
 @@ -801,7 +801,10 @@ int __dvb_fe_get_parms(struct dvb_v5_fe_parms *p)
@@ -49,7 +49,7 @@ index 5dcf492e..8e0684fe 100644
  		dvb_fe_retrieve_parm(&tmp_parms.p, DTV_MODULATION, &v3_parms.u.vsb.modulation);
  		break;
  	case SYS_DVBT:
-@@ -1575,7 +1599,10 @@ int dvb_fe_get_event(struct dvb_v5_fe_parms *p)
+@@ -1577,7 +1601,10 @@ int dvb_fe_get_event(struct dvb_v5_fe_parms *p)
  		break;
  	case SYS_ATSC:
  	case SYS_ATSCMH:
@@ -61,10 +61,10 @@ index 5dcf492e..8e0684fe 100644
  		break;
  	case SYS_DVBT:
 diff --git a/lib/libdvbv5/dvb-scan.c b/lib/libdvbv5/dvb-scan.c
-index 7ff8ba4f..02ad01cc 100644
+index 5c8aca96..301e19cb 100644
 --- a/lib/libdvbv5/dvb-scan.c
 +++ b/lib/libdvbv5/dvb-scan.c
-@@ -1143,6 +1143,8 @@ static void add_update_nit_isdbs(struct dvb_table_nit *nit,
+@@ -1159,6 +1159,8 @@ static void add_update_nit_isdbs(struct dvb_table_nit *nit,
  			     dvbs_polarization[d->polarization]);
  	dvb_store_entry_prop(new, DTV_SYMBOL_RATE,
  			     d->symbol_rate);
@@ -73,7 +73,7 @@ index 7ff8ba4f..02ad01cc 100644
  }
  
  
-@@ -1168,6 +1170,7 @@ static void __dvb_add_update_transponders(struct dvb_v5_fe_parms_priv *parms,
+@@ -1184,6 +1186,7 @@ static void __dvb_add_update_transponders(struct dvb_v5_fe_parms_priv *parms,
  
  	switch (parms->p.current_sys) {
  	case SYS_DVBC_ANNEX_A:

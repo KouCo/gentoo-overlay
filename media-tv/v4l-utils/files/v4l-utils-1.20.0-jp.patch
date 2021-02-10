@@ -1,0 +1,95 @@
+diff --git a/lib/libdvbv5/dvb-fe.c b/lib/libdvbv5/dvb-fe.c
+index 68dd57c4..4e93d422 100644
+--- a/lib/libdvbv5/dvb-fe.c
++++ b/lib/libdvbv5/dvb-fe.c
+@@ -801,7 +801,10 @@ int __dvb_fe_get_parms(struct dvb_v5_fe_parms *p)
+ 		break;
+ 	case SYS_ATSC:
+ 	case SYS_ATSCMH:
++		dvb_fe_store_parm(&parms->p, DTV_MODULATION, v3_parms.u.vsb.modulation);
++		break;
+ 	case SYS_DVBC_ANNEX_B:
++		dvb_fe_store_parm(&parms->p, DTV_SYMBOL_RATE, v3_parms.u.qam.symbol_rate);
+ 		dvb_fe_store_parm(&parms->p, DTV_MODULATION, v3_parms.u.vsb.modulation);
+ 		break;
+ 	case SYS_DVBT:
+@@ -830,6 +833,24 @@ static void dvb_setup_delsys_default(struct dvb_v5_fe_parms *p)
+ 	uint32_t cc;
+ 
+ 	switch (p->current_sys) {
++	case SYS_DVBC_ANNEX_A:
++	case SYS_DVBC_ANNEX_B:
++	case SYS_DVBC_ANNEX_C:
++	case SYS_DVBS2:
++		cc = COUNTRY_UNKNOWN;
++		dvb_fe_retrieve_parm(p, DTV_COUNTRY_CODE, &cc);
++		if (cc == COUNTRY_UNKNOWN && parms->country != COUNTRY_UNKNOWN) {
++			cc = parms->country;
++			dvb_fe_store_parm(p, DTV_COUNTRY_CODE, cc);
++		}
++		switch (cc) {
++		case JP:
++			p->default_charset = "arib-std-b24";
++			break;
++		default:
++			break;
++		}
++		break;
+ 	case SYS_ISDBT:
+ 		/* Set country code. */
+ 		/* if the default country is not known, fallback to BR */
+@@ -951,7 +972,10 @@ int __dvb_fe_set_parms(struct dvb_v5_fe_parms *p)
+ 		break;
+ 	case SYS_ATSC:
+ 	case SYS_ATSCMH:
++		dvb_fe_retrieve_parm(&tmp_parms.p, DTV_MODULATION, &v3_parms.u.vsb.modulation);
++		break;
+ 	case SYS_DVBC_ANNEX_B:
++		dvb_fe_retrieve_parm(&tmp_parms.p, DTV_SYMBOL_RATE, &v3_parms.u.qam.symbol_rate);
+ 		dvb_fe_retrieve_parm(&tmp_parms.p, DTV_MODULATION, &v3_parms.u.vsb.modulation);
+ 		break;
+ 	case SYS_DVBT:
+@@ -1577,7 +1601,10 @@ int dvb_fe_get_event(struct dvb_v5_fe_parms *p)
+ 		break;
+ 	case SYS_ATSC:
+ 	case SYS_ATSCMH:
++		dvb_fe_retrieve_parm(&parms->p, DTV_MODULATION, &event.parameters.u.vsb.modulation);
++		break;
+ 	case SYS_DVBC_ANNEX_B:
++		dvb_fe_retrieve_parm(&parms->p, DTV_SYMBOL_RATE, &event.parameters.u.qam.symbol_rate);
+ 		dvb_fe_retrieve_parm(&parms->p, DTV_MODULATION, &event.parameters.u.vsb.modulation);
+ 		break;
+ 	case SYS_DVBT:
+diff --git a/lib/libdvbv5/dvb-scan.c b/lib/libdvbv5/dvb-scan.c
+index 5c8aca96..301e19cb 100644
+--- a/lib/libdvbv5/dvb-scan.c
++++ b/lib/libdvbv5/dvb-scan.c
+@@ -1159,6 +1159,8 @@ static void add_update_nit_isdbs(struct dvb_table_nit *nit,
+ 			     dvbs_polarization[d->polarization]);
+ 	dvb_store_entry_prop(new, DTV_SYMBOL_RATE,
+ 			     d->symbol_rate);
++	dvb_store_entry_prop(new, DTV_STREAM_ID,
++			     ts_id);
+ }
+ 
+ 
+@@ -1184,6 +1186,7 @@ static void __dvb_add_update_transponders(struct dvb_v5_fe_parms_priv *parms,
+ 
+ 	switch (parms->p.current_sys) {
+ 	case SYS_DVBC_ANNEX_A:
++	case SYS_DVBC_ANNEX_B:
+ 	case SYS_DVBC_ANNEX_C:
+ 		dvb_table_nit_descriptor_handler(
+ 				&parms->p, dvb_scan_handler->nit,
+diff --git a/lib/libdvbv5/dvb-v5-std.c b/lib/libdvbv5/dvb-v5-std.c
+index c0a14175..3ba5d9c5 100644
+--- a/lib/libdvbv5/dvb-v5-std.c
++++ b/lib/libdvbv5/dvb-v5-std.c
+@@ -117,6 +117,7 @@ const unsigned int sys_dvbc_annex_ac_props[] = {
+ const unsigned int sys_dvbc_annex_b_props[] = {
+ 	DTV_FREQUENCY,
+ 	DTV_MODULATION,
++	DTV_SYMBOL_RATE,
+ 	0
+ };
+ 

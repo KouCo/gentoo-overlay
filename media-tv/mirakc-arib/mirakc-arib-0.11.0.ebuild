@@ -8,8 +8,8 @@ CMAKE_MAKEFILE_GENERATOR="ninja"
 inherit cmake-utils
 
 DESCRIPTION="mirakc-tools for Japanese TV broadcast contents"
-HOMEPAGE="https://github.com/masnagam/mirakc-arib"
-SRC_URI="https://github.com/masnagam/mirakc-arib/archive/${PV}.tar.gz"
+HOMEPAGE="https://github.com/mirakc/mirakc-arib"
+SRC_URI="https://github.com/mirakc/mirakc-arib/archive/${PV}.tar.gz"
 
 LICENSE="MIT Apache-2.0"
 SLOT="0"
@@ -21,10 +21,6 @@ RDEPEND=""
 DEPEND="${RDEPEND}
         dev-util/ninja
 "
-
-PATCHES=(
-	"${FILESDIR}/${PV}-pat-assert.patch"
-)
 
 src_configure() {
 	if use debug; then

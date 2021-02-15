@@ -6,17 +6,17 @@ EAPI=7
 inherit systemd cargo
 
 DESCRIPTION="mirakc"
-HOMEPAGE="https://github.com/masnagam/mirakc"
-SRC_URI="https://github.com/masnagam/mirakc/archive/${PV}.tar.gz"
+HOMEPAGE="https://github.com/mirakc/mirakc"
+SRC_URI="https://github.com/mirakc/mirakc/archive/${PV}.tar.gz"
 
 LICENSE="MIT Apache-2.0"
 SLOT="0"
-KEYWORDS="amd64"
+KEYWORDS="~amd64"
 RESTRICT="network-sandbox"
 IUSE="systemd debug"
 REQUIRED_USE="systemd"
 
-RDEPEND="media-tv/mirakc-arib
+RDEPEND="=media-tv/mirakc-arib-0.11.0
          net-misc/socat
 "
 DEPEND="${RDEPEND}
@@ -47,8 +47,9 @@ src_install() {
 	cargo_src_install
 
 	insinto /etc/mirakc
-	newins ${S}/docker/sample-mirakc-config.yml config.yml
-	newins ${FILESDIR}/mirakurun.openapi-2.14.0.json mirakurun.openapi.json
+	newins ${S}/docker/config.yml config.yml
+	newins ${S}/resources/strings.yml strings.yml
+	newins ${FILESDIR}/mirakurun.openapi-3.3.1.json mirakurun.openapi.json
 
 	keepdir /var/lib/mirakc/epg
 

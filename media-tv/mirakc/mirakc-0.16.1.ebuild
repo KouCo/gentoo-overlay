@@ -16,7 +16,7 @@ RESTRICT="network-sandbox"
 IUSE="systemd debug"
 REQUIRED_USE="systemd"
 
-RDEPEND="=media-tv/mirakc-arib-0.11.0
+RDEPEND="media-tv/mirakc-arib
          net-misc/socat
 "
 DEPEND="${RDEPEND}

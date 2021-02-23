@@ -13,7 +13,7 @@ SRC_URI="https://github.com/mirakc/mirakc-arib/archive/${PV}.tar.gz"
 
 LICENSE="MIT Apache-2.0"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 RESTRICT="network-sandbox"
 IUSE="debug"
 

@@ -11,13 +11,14 @@ SRC_URI="https://github.com/mirakc/mirakc/archive/${PV}.tar.gz"
 
 LICENSE="MIT Apache-2.0"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 RESTRICT="network-sandbox"
-IUSE="systemd debug"
+IUSE="systemd timeshift debug"
 REQUIRED_USE="systemd"
 
 RDEPEND="media-tv/mirakc-arib
          net-misc/socat
+         timeshift? ( sys-fs/fuse )
 "
 DEPEND="${RDEPEND}
         || (
@@ -39,17 +40,33 @@ src_unpack() {
 	cargo_gen_config
 }
 
+src_configure() {
+#	myfeatures=(
+#		"mirakc"
+#		$(usex timeshift mirakc-timeshift-fs '')
+#	)
+	bin=$(usex timeshift "" "--bin mirakc")
+	cargo_src_configure ${bin}
+#	if use timeshift; then
+#		cargo_src_configure --bin mirakc-timeshift-fs
+#	fi
+}
+
 src_compile() {
 	cargo_src_compile
 }
 
 src_install() {
-	cargo_src_install
+#	cargo_src_install
+	dobin ${S}/target/release/mirakc
+	if use timeshift; then
+		dobin ${S}/target/release/mirakc-timeshift-fs
+	fi
 
 	insinto /etc/mirakc
 	newins ${S}/docker/config.yml config.yml
 	newins ${S}/resources/strings.yml strings.yml
-	newins ${FILESDIR}/mirakurun.openapi-3.3.1.json mirakurun.openapi.json
+#	newins ${S}/resources/mirakurun.openapi.json mirakurun.openapi.json
 
 	keepdir /var/lib/mirakc/epg
 

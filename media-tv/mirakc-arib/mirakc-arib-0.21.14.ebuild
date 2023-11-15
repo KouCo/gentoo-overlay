@@ -5,11 +5,14 @@ EAPI=7
 
 CMAKE_MAKEFILE_GENERATOR="ninja"
 
-inherit cmake-utils
+inherit git-r3 cmake
 
 DESCRIPTION="mirakc-tools for Japanese TV broadcast contents"
 HOMEPAGE="https://github.com/mirakc/mirakc-arib"
-SRC_URI="https://github.com/mirakc/mirakc-arib/archive/${PV}.tar.gz"
+#SRC_URI="https://github.com/mirakc/mirakc-arib/archive/${PV}.tar.gz"
+EGIT_REPO_URI="https://github.com/mirakc/mirakc-arib"
+EGIT_SUBMODULES=('*')
+EGIT_COMMIT="${PV}"
 
 LICENSE="MIT Apache-2.0"
 SLOT="0"
@@ -24,12 +27,12 @@ DEPEND="${RDEPEND}
 
 src_configure() {
 	if use debug; then
-		CMAKE_BUILD_TYPE="Debug"
+		MYCMAKEORGS="Debug"
 	else
-		CMAKE_BUILD_TYPE="Release"
+		MYCMAKEARGS="Release"
 	fi
 
-	cmake-utils_src_configure
+	cmake_src_configure
 }
 
 src_compile() {
